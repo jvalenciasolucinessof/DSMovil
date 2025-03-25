@@ -12,4 +12,5 @@ export default {
   accent: "#FFD700", // Super Saiyan gold
   background: "#F0E68C", // Kame House sand
   text: "#000000", // Black for text
+  text2: "#ffffff", // White for text
 };
