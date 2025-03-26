@@ -1,7 +1,6 @@
 import React, { use, useEffect } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import {useNavigation} from "@react-navigation/native";
-import { LinearGradient } from "expo-linear-gradient";
 import color  from '../constants/color.js'
 const SplashScreen = () => {
 
@@ -16,10 +15,10 @@ const SplashScreen = () => {
   }, [navigation]);
 
   return (
-    <LinearGradient colors={ color.gradient1 } style={style.container}>
+    <View style={style.container}>
         <Image source={require('../../assets/goku-dance.gif')} style={style.logo} />
         <Text style={style.text}>Dame tu energia para la henki-dama</Text>
-    </LinearGradient>
+    </View>
   );
 };
 
@@ -28,6 +27,7 @@ const style = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: color.backgroud
   },
   logo:{
     width : 100,
