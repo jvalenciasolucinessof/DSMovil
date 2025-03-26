@@ -13,6 +13,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../services/firebaseConfig.js";
 import { useNavigation } from "@react-navigation/native";
 import { Alert } from "react-native";
+import { globalStyles } from "../../constants/CustomTheme.js";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -20,23 +21,26 @@ const LoginScreen = () => {
   const navigation = useNavigation();
 
   const handleLogin = () => {
-    // Alert.alert(email, password);
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log(user)
-        Alert.alert("Login exitoso", "Usuario logueado correctamente");
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "main" }],
-        });
-      })
-      .catch((error) => {
-        Alert.alert("Error", error.message);
-      });
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "dashboard" }],
+    });
+    // signInWithEmailAndPassword(auth, email, password)
+    //   .then((userCredential) => {
+    //     const user = userCredential.user;
+    //     console.log(user)
+    //     Alert.alert("Login exitoso", "Usuario logueado correctamente");
+    //     navigation.reset({
+    //       index: 0,
+    //       routes: [{ name: "dashboard" }],
+    //     });
+    //   })
+    //   .catch((error) => {
+    //     Alert.alert("Error", error.message);
+    //   });
   };
   return (
-    <View style={styles.container}>
+    <View style={globalStyles.containerLogin}>
       <View style={styles.logoContainer}>
         <Image
           source={require("../../../assets/goku-dance.gif")}
@@ -79,12 +83,6 @@ const LoginScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 200,
-    alignItems: "center",
-    backgroundColor: color.backgroud,
-  },
   title: {
     fontSize: 30,
     fontWeight: "bold",
