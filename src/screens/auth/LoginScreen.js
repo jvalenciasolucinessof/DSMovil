@@ -21,23 +21,18 @@ const LoginScreen = () => {
   const navigation = useNavigation();
 
   const handleLogin = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "dashboard" }],
-    });
-    // signInWithEmailAndPassword(auth, email, password)
-    //   .then((userCredential) => {
-    //     const user = userCredential.user;
-    //     console.log(user)
-    //     Alert.alert("Login exitoso", "Usuario logueado correctamente");
-    //     navigation.reset({
-    //       index: 0,
-    //       routes: [{ name: "dashboard" }],
-    //     });
-    //   })
-    //   .catch((error) => {
-    //     Alert.alert("Error", error.message);
-    //   });
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        Alert.alert("Login exitoso", "Usuario logueado correctamente");
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "dashboard" }],
+        });
+      })
+      .catch((error) => {
+        Alert.alert("Error", error.message);
+      });
   };
   return (
     <View style={globalStyles.containerLogin}>
