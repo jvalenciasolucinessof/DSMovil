@@ -16,8 +16,8 @@ import { Alert } from "react-native";
 import { globalStyles } from "../../constants/CustomTheme.js";
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("1@1.com");
+  const [password, setPassword] = useState("123456");
   const navigation = useNavigation();
 
   const handleLogin = () => {

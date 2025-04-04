@@ -11,11 +11,17 @@ import MoviesScreen from "../screens/movies/MoviesScreen.js";
 import color from "../constants/color.js";
 import { useNavigation } from "@react-navigation/native";
 import CustomScreen from "../screens/auth/CustomScreen.js";
+import { useAuth } from "../context/AuthContext.js";
+import DetailMovieScreen from "../screens/movies/DetailMovieScreen.js";
 const stack = createNativeStackNavigator();
 const AppNavigation = () => {
   const navigation = useNavigation();
+  // const {user} = useAuth();
+  // console.log('Users: '+user)
+  // const initialRoute = (user == null) ? 'splash' : 'dashboard'
+  // console.log(user)
   return (
-    <stack.Navigator>
+    <stack.Navigator >
       <stack.Screen name="splash" component={SplashScreen} options={{ headerShown: false }} />
       <stack.Screen name="login" component={LoginScreen} options={{ headerShown: false }} />
       <stack.Screen name="register" component={RegisterScreen} options={{ headerShown: false }} />
@@ -29,6 +35,7 @@ const AppNavigation = () => {
       />
       <stack.Screen name="movies" component={MoviesScreen} options={{ headerShown: false }} />
       <stack.Screen name="custom" component={CustomScreen} options={{ headerShown: false }} />
+      <stack.Screen name="detail" component={DetailMovieScreen} options={{ headerShown: false }} />
     </stack.Navigator>
   );
 };
