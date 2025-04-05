@@ -1,154 +1,161 @@
-import {
-    View,
-    Text,
-    StyleSheet,
-    TextInput,
-    TouchableOpacity,
-    Image,
-  } from "react-native";
-  import React, { useState } from "react";
-  import color from "../../constants/color.js";
-  import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-  import { signInWithEmailAndPassword } from "firebase/auth";
-  import { auth } from "../../services/firebaseConfig.js";
-  import { useNavigation } from "@react-navigation/native";
-  import { Alert } from "react-native";
-  import { globalStyles } from "../../constants/CustomTheme.js";
-  import { useAuth } from "../../context/AuthContext.js";
-  
-  const CustomScreen = () => {
-    const {user} = useAuth()
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const navigation = useNavigation();
-  
-    const handleLogin = () => {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "dashboard" }],
-      });
-      // signInWithEmailAndPassword(auth, email, password)
-      //   .then((userCredential) => {
-      //     const user = userCredential.user;
-      //     console.log(user)
-      //     Alert.alert("Login exitoso", "Usuario logueado correctamente");
-      //     navigation.reset({
-      //       index: 0,
-      //       routes: [{ name: "dashboard" }],
-      //     });
-      //   })
-      //   .catch((error) => {
-      //     Alert.alert("Error", error.message);
-      //   });
-    };
-    return (
-      <View style={globalStyles.containerLogin}>
-        <View style={styles.logoContainer}>
-          <Image
-            source={require("../../../assets/goku-dance.gif")}
-            style={styles.logo}
-            contentFit="contain"
-          />
-        </View>
-        <Text style={styles.title}>Inicia sesion</Text>
-        <View style={styles.inputContainer}>
-          <Icon name="email" size={20} color={color.primary2} />
-          <TextInput
-            placeholder="Email"
-            style={styles.input}
-            value={email}
-            onChangeText={setEmail}
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <Icon name="lock" size={20} color={color.primary2} />
-          <TextInput
-            secureTextEntry
-            placeholder="Password"
-            style={styles.input}
-            value={password}
-            onChangeText={setPassword}
-          />
-        </View>
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>{user?.displayName || 'Usuario'}</Text>
-        </TouchableOpacity>
-  
-        <View style={styles.textContainer}>
-          <Text style={styles.text}>No tienes una cuenta?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("register")}>
-            <Text style={styles.textLink}> Registrate </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
+import { View, StyleSheet, Text, Pressable, TouchableOpacity } from 'react-native'
+import React, { useState } from "react";
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { useAuth } from "../../context/AuthContext.js";
+import color from '../../constants/color.js';
+import ModalEdit from '../../components/auth/ModalEdit.js';
+import { updateEmail, updatePassword, updateProfile } from 'firebase/auth';
+import { auth } from '../../services/firebaseConfig.js';
+import { showMessage } from 'react-native-flash-message';
+
+
+const CustomScreen = () => {
+  const safeArea = useSafeAreaInsets()
+  const navigation = useNavigation();
+  const { user } = useAuth()
+  const [modalVisible, setModalVisible] = useState("")
+  const [modalTitle, setModalTitle] = useState("")
+  const [fieldValue, setFieldValue] = useState("")
+  const handleEdit = (field) => {
+    setModalVisible(true)
+    setModalTitle(field)
+    setFieldValue(
+      field === 'Nombre' ? user.displayName || '' :
+        field === 'Correo' ? user.email || '' :
+          field === 'Contraseña' ? '' : ''
+    )
   };
-  
-  const styles = StyleSheet.create({
-    title: {
-      fontSize: 30,
-      fontWeight: "bold",
-      color: color.primary2,
-    },
-    inputContainer: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: 10,
-      borderRadius: 10,
-      borderColor: color.primary2,
-      borderWidth: 1.5,
-      marginTop: 30,
-      width: "80%",
-    },
-    input: {
-      flex: 1,
-      padding: 10,
-      backgroundColor: color.backgroud,
-    },
-    button: {
-      backgroundColor: color.primary2,
-      padding: 10,
-      borderRadius: 10,
-      marginTop: 50,
-      width: "80%",
-      height: 50,
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    buttonText: {
-      color: color.text2,
-      fontWeight: "bold",
-      textAlign: "center",
-      fontSize: 18,
-    },
-    text: {
-      fontSize: 16,
-      marginTop: 20,
-      color: color.text,
-    },
-    textLink: {
-      fontSize: 18,
-      color: color.primary2,
-      fontWeight: "bold",
-    },
-    textContainer: {
-      marginTop: 20,
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    logoContainer: {
-      width: 200,
-      height: 100,
-      top: -100,
-    },
-    logo: {
-      width: "200",
-      height: "200",
-      resizeMode: "contain",
-    },
-  });
-  export default CustomScreen;
-  
+  const handeleSave = async () => {
+    try {
+      if (modalTitle === 'Nombre') {
+        await updateProfile(auth.currentUser, { displayName: fieldValue })
+        showMessage({
+          message:"Actualizacion",
+          description: 'Nombre actualizado correctamente',
+          type: 'success'
+        })
+      } else if (modalTitle === 'Correo') {
+        await updateEmail(auth.currentUser, fieldValue )
+        showMessage({
+          message:"Actualizacion",
+          description: 'Correo actualizado correctamente',
+          type: 'success'
+        })
+      } else if (modalTitle === 'Contraseña') {
+        await updatePassword(auth.currentUser, fieldValue )
+        showMessage({
+          message:"Actualizacion",
+          description: 'Nombre actualizado correctamente',
+          type: 'success'
+        })
+      }
+     
+    } catch (error) {
+      showMessage({
+        message:"Error",
+        description: 'No se puedo realizar la actualizacion',
+        type: 'danger'
+      })
+    }finally{
+      setModalVisible(false)
+    }
+  }
+  return (
+    <View style={{ paddingTop: safeArea.top, paddingBottom: 20 }}>
+      <View style={styles.containerText}>
+        <View style={{ position: 'absolute', zIndex: 99, elevation: 9, left: 10 }}>
+          <Pressable onPress={() => navigation.goBack()}>
+            <Ionicons name='arrow-back' size={30} color="black" />
+          </Pressable>
+        </View>
+        <Text style={styles.textPrim}>Usuarios</Text>
+      </View>
+      <View style={styles.infoUser}>
+        <View style={{ flex: 2 }}>
+          <Text style={styles.textProp}>Nombre de Usuario</Text>
+          <Text style={styles.textPropData}>{user?.displayName || ' '}</Text>
+        </View>
+        <TouchableOpacity style={styles.button} onPress={() => handleEdit("Nombre")}>
+          <Text style={styles.buttonText}>Editar</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.infoUser}>
+        <View style={{ flex: 2 }}>
+          <Text style={styles.textProp}>Correo</Text>
+          <Text style={styles.textPropData}>{user?.email || ' '}</Text>
+        </View>
+        <TouchableOpacity style={styles.button} onPress={() => handleEdit("Correo")}>
+          <Text style={styles.buttonText}>Editar</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.infoUser}>
+        <View style={{ flex: 2 }}>
+          <Text style={styles.textProp}>Contraseña</Text>
+          <Text style={styles.textPropData}>****************</Text>
+        </View>
+        <TouchableOpacity style={styles.button} onPress={() => handleEdit("Contraseña")}>
+          <Text style={styles.buttonText}>Editar</Text>
+        </TouchableOpacity>
+      </View>
+      <ModalEdit
+        visible={modalVisible}
+        title={modalTitle}
+        value={fieldValue}
+        onChangeText={setFieldValue}
+        onSave={handeleSave}
+        onCancel={() => setModalVisible(false)}
+      />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  containerText: {
+    alignItems: 'center'
+  },
+  textPrim: {
+    fontSize: 30,
+    fontWeight: 'bold',
+  },
+  button: {
+    flex: 1,
+    backgroundColor: color.primary2,
+    padding: 10,
+    borderRadius: 10,
+    width: "80%",
+    height: 45,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  buttonText: {
+    color: color.text2,
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 18,
+  },
+  textPropData: {
+    fontSize: 15,
+    fontWeight: 'thin',
+    marginTop: 2
+  },
+  textProp: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  infoUser: {
+    flexDirection: 'row',
+    marginInline: 20,
+    marginTop: 30,
+    alignItems: 'center'
+  },
+
+});
+export default CustomScreen;

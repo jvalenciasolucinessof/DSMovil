@@ -1,7 +1,6 @@
 import { View, Text, Image, StyleSheet } from 'react-native';
 
 const ActorCard = ({ actor }) => {
-    console.log('actor', JSON.stringify(actor.profile_path, null, 2))
     const avatar = actor.profile_path
     ? `${process.env.EXPO_PUBLIC_MOVIE_DB_API_URL_IMAGE}${actor.profile_path}`
     : 'https://i.stack.imgur.com/l60Hf.png';
@@ -27,6 +26,7 @@ const styles = StyleSheet.create({
   container: {
     marginHorizontal: 30,
     width: 60,
+    marginTop:20,
   },
   image: {
     width: 100,
