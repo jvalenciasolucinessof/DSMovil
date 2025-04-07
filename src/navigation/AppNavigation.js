@@ -13,13 +13,11 @@ import { useNavigation } from "@react-navigation/native";
 import CustomScreen from "../screens/auth/CustomScreen.js";
 import { useAuth } from "../context/AuthContext.js";
 import DetailMovieScreen from "../screens/movies/DetailMovieScreen.js";
+import PokemonScreen from "../screens/pokemon/PokemonScreen.js";
+import SearchPokeScreen from "../screens/pokemon/SearchPokeScreen.js";
 const stack = createNativeStackNavigator();
 const AppNavigation = () => {
   const navigation = useNavigation();
-  // const {user} = useAuth();
-  // console.log('Users: '+user)
-  // const initialRoute = (user == null) ? 'splash' : 'dashboard'
-  // console.log(user)
   return (
     <stack.Navigator >
       <stack.Screen name="splash" component={SplashScreen} options={{ headerShown: false }} />
@@ -36,6 +34,8 @@ const AppNavigation = () => {
       <stack.Screen name="movies" component={MoviesScreen} options={{ headerShown: false }} />
       <stack.Screen name="custom" component={CustomScreen} options={{ headerShown: false }} />
       <stack.Screen name="detail" component={DetailMovieScreen} options={{ headerShown: false }} />
+      <stack.Screen name="pokemon" component={PokemonScreen} options={{ headerShown: false }} />
+      <stack.Screen name="searchpoke" component={SearchPokeScreen} options={{ headerShown: false }} />
     </stack.Navigator>
   );
 };

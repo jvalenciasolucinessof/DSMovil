@@ -21,17 +21,24 @@ const LoginScreen = () => {
   const navigation = useNavigation();
 
   const handleLogin = () => {
+    if (email === "") {
+      Alert.alert('❌❌❌', 'El correo no puede ser vacio')
+      return false
+    }
+    if (password === "") {
+      Alert.alert('❌❌❌', 'El Contraseña no puede ser vacia')
+      return false
+    }
+
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        const user = userCredential.user;
-        Alert.alert("Login exitoso", "Usuario logueado correctamente");
         navigation.reset({
           index: 0,
-          routes: [{ name: "dashboard" }],
+          routes: [{ name: "Home" }],
         });
       })
       .catch((error) => {
-        Alert.alert("Error", error.message);
+        Alert.alert("❌❌❌", error.code);
       });
   };
   return (
