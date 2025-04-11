@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getMovieById } from "../../../core/accion/movies/get-movie-by-id.accion";
-import { getActorMovie } from "../../../core/accion/movies/get-actor-movie.accition";
+import { getActorMovie } from "../../../core/accion/movies/get-actor-movie.accion";
 
 export const useDetailMovie = (id) => {
     const detailMovie = useQuery({

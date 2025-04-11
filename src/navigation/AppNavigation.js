@@ -11,10 +11,10 @@ import MoviesScreen from "../screens/movies/MoviesScreen.js";
 import color from "../constants/color.js";
 import { useNavigation } from "@react-navigation/native";
 import CustomScreen from "../screens/auth/CustomScreen.js";
-import { useAuth } from "../context/AuthContext.js";
 import DetailMovieScreen from "../screens/movies/DetailMovieScreen.js";
 import PokemonScreen from "../screens/pokemon/PokemonScreen.js";
 import SearchPokeScreen from "../screens/pokemon/SearchPokeScreen.js";
+import PokemonDetailScreen from "../screens/pokemon/PokemonDetailScreen.js";
 const stack = createNativeStackNavigator();
 const AppNavigation = () => {
   const navigation = useNavigation();
@@ -36,6 +36,7 @@ const AppNavigation = () => {
       <stack.Screen name="detail" component={DetailMovieScreen} options={{ headerShown: false }} />
       <stack.Screen name="pokemon" component={PokemonScreen} options={{ headerShown: false }} />
       <stack.Screen name="searchpoke" component={SearchPokeScreen} options={{ headerShown: false }} />
+      <stack.Screen name="pokemondetail" component={PokemonDetailScreen} options={{ headerShown: false }} />
     </stack.Navigator>
   );
 };
