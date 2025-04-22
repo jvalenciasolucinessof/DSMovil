@@ -34,7 +34,7 @@ const LoginScreen = () => {
       .then((userCredential) => {
         navigation.reset({
           index: 0,
-          routes: [{ name: "Home" }],
+          routes: [{ name: "dashboard" }],
         });
       })
       .catch((error) => {
