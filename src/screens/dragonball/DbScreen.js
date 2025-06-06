@@ -12,27 +12,41 @@ import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { usePokemons } from "../../hooks/pokemon/usePokemon";
 import color from "../../constants/color";
-import { getPokemons } from "../../../core/accion/pokemon/get-pokemon.action";
 import PokeBallBg from "../../components/pokemon/PokeBallBg";
-import PokemonCard from "../../components/pokemon/PokemonCard";
+import { useDragonBall } from "../../hooks/dragonball/useDragonBall";
+import DragonCard from "../../components/dragonball/DragonCard";
 
-const PokemonScreen = () => {
+const DbScreen = () => {
   const navigation = useNavigation();
-  const { getPokemonTQ } = usePokemons();
+  const { getDragonBallTQ } = useDragonBall();
+  // console.log('getDragonBallTQ.data', JSON.stringify(getDragonBallTQ.data.pages, null, 2))
   const safeArea = useSafeAreaInsets();
-  if (getPokemonTQ.isLoading) {
+  // const characters = getDragonBallTQ.data.pages.map((page) => page.items)[0];
+
+  if (getDragonBallTQ.isLoading) {
     return (
       <View style={styles.container}>
         <ActivityIndicator color={color.primary2} />
       </View>
     );
   }
+  
+  if (getDragonBallTQ.isError) {
+    return (
+      <View style={styles.container}>
+        <Text>Error al cargar personajes</Text>
+      </View>
+    );
+  }
+  
+  const characters =
+    getDragonBallTQ.data?.pages?.flatMap((page) => page.items) ?? [];
+
   return (
     <SafeAreaView>
-      <PokeBallBg style={styles.imgPosition} tipoImg="PK" />
-      <View style={{paddingBottom: 20 }}>
+      <PokeBallBg style={styles.imgPosition} tipoImg="DBZ" />
+      <View style={{ paddingBottom: 20 }}>
         <View style={styles.containerText}>
           <View
             style={{ position: "absolute", zIndex: 99, elevation: 9, left: 10 }}
@@ -41,19 +55,20 @@ const PokemonScreen = () => {
               <Ionicons name="arrow-back" size={30} color="black" />
             </Pressable>
           </View>
-          <Text style={styles.textPrim}>Pokemon</Text>
+          <Text style={styles.textPrim}>DRAGON BALL</Text>
         </View>
-          <FlatList
-            data={getPokemonTQ.data?.pages.flat() ?? []}
-            keyExtractor={(pokemon, i) => `${pokemon.id}-${i}`}
+        {/* {getDragonBallTQ.data?.pages.flat().map((item, index) => (
+          <Text key={index}>{item.name}</Text>
+        ))} */}
+        <FlatList
+            data={characters}
+            keyExtractor={(item) => `${item.id}`}
             numColumns={2}
             style={{ paddingTop: 20 }}
-            renderItem={({item}) =><PokemonCard pokemon={item} />}
-            onEndReached={() => getPokemonTQ.fetchNextPage()}
+            renderItem={({item}) =><DragonCard characters={item} />}
+            onEndReached={() => getDragonBallTQ.fetchNextPage()}
             showsVerticalScrollIndicator={false}
           />
-
-
       </View>
     </SafeAreaView>
   );
@@ -74,9 +89,9 @@ const styles = StyleSheet.create({
   },
   imgPosition: {
     position: "absolute",
-    top: -100,
-    right: -100,
+    top: -40,
+    right: -50,
   },
 });
 
-export default PokemonScreen;
+export default DbScreen;

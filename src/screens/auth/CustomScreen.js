@@ -17,97 +17,110 @@ import ModalEdit from "../../components/auth/ModalEdit.js";
 import { updateEmail, updatePassword, updateProfile } from "firebase/auth";
 import { auth } from "../../services/firebaseConfig.js";
 import { showMessage } from "react-native-flash-message";
-import * as ImagePicker from 'expo-image-picker'
+import * as ImagePicker from "expo-image-picker";
+import ModalImagePicker from "../../components/auth/ModalImagePicker.js";
 
 const CustomScreen = () => {
-
   const safeArea = useSafeAreaInsets();
   const navigation = useNavigation();
   const { user, setUser } = useAuth();
   // const defaultImage = require('../../../assets/userImage.jpg');
-  const defaultImage = 'https://icon-library.com/images/default-user-icon/default-user-icon-3.jpg';
+  const defaultImage =
+    "https://icon-library.com/images/default-user-icon/default-user-icon-3.jpg";
 
   const [imageUri, setImageUri] = useState(null);
 
   const [modalVisible, setModalVisible] = useState("");
   const [modalTitle, setModalTitle] = useState("");
   const [fieldValue, setFieldValue] = useState("");
+  const [isImageModalVisible, setModalImageVisible] = useState("");
 
-
-  const CLOUDINARY_URL= `https://api.cloudinary.com/v1_1/daalcja1j/image/upload`;
+  const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/daalcja1j/image/upload`;
   const UPLOAD_PRESET = "JVALENCIA_SS";
 
   useEffect(() => {
-    if (user && user.photoUrl) {
-        setImageUri()
+    // console.log(user.photoURL)
+    // console.log('user', JSON.stringify(user, null, 2))
+    if (user && user.photoURL) {
+      setImageUri(user.photoURL);
     } else {
-      setImageUri(defaultImage)
+      setImageUri(defaultImage);
     }
-  }, [user])
+  }, [user]);
 
   const handleChooseImage = async () => {
     try {
-      const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if(status !== 'granted' ){
-        Alert.alert(`Permiso denegado`,'No cuentas con el permiso para acceder a la galeria')
-        return false
-      }
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ['img'],
-        allowsEditing,
-        quality: 1,
-        base64
-      })
-      if(result.canceled) {
-        Alert.alert(`Cancelado`,'No se selecciono ninguna imagen')
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert(
+          `Permiso denegado`,
+          "No cuentas con el permiso para acceder a la galeria"
+        );
         return false;
       }
-      console.log('Imagan seleccionada', result)
-      setFieldValue(`data:image/jpeg;base64,${result.base64}`)
-      setModalVisible(true)
-    } catch (error) {
-      Alert.alert('upssss','algo salido mal en la ejecucion comunicate con tu administrador TI')
-      console.log(error)
-    }
-  }
-
-  const uploadImage = async () => {
-    if(!user || !fieldValue){
-      console.error('Usuario o URL de imagen no validos: ',{user, fieldValue});
-      return false
-    }
-    try {
-      const isBase64 = fieldValue.startsWith('data:image')
-      let fileData; 
-
-      if(isBase64){
-        fileData = fieldValue.split(',')[1]
-      }else{
-        throw new Error('Formato de imagen no soportado') 
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'],
+        allowsEditing: true,
+        quality: 1,
+        base64: true,
+      });
+      if (result.canceled) {
+        Alert.alert(`Cancelado`, "No se selecciono ninguna imagen");
+        return false;
       }
 
-      const formData = new FormData()
-      formData.append('file',fileData)
-      formData.append('upload_preset',UPLOAD_PRESET)
+      const imageBase64 = result.assets[0].base64;
+      const imageType = result.assets[0].type || "image/jpeg";
 
-      const response = await fetch(CLOUDINARY_URL,{
-        method:'POST',
-        body:formData
-      })
-      const data = await response.json()
-      console.log("respuesta de cloundinary: ",data)
+      const base64String = `data:${imageType};base64,${imageBase64}`;
+      setFieldValue(base64String);
+      setModalVisible(true);
+    } catch (error) {
+      Alert.alert(
+        "upssss",
+        "algo salido mal en la ejecucion comunicate con tu administrador TI"
+      );
+      console.log(error);
+    }
+  };
+
+  const uploadImage = async () => {
+    if (!user || !fieldValue) {
+      console.error("Usuario o URL de imagen no validos: ", {
+        user,
+        fieldValue,
+      });
+      return false;
+    }
+    try {
+      if (!fieldValue.startsWith("data:image")) {
+        throw new Error("Formato de imagen no soportado");
+      }
+
+      const formData = new FormData();
+      formData.append("file", fieldValue);
+      formData.append("upload_preset", UPLOAD_PRESET);
+      const response = await fetch(CLOUDINARY_URL, {
+        method: "POST",
+        body: formData,
+      });
+      const data = await response.json();
+      // console.log("respuesta de cloundinary: ", data);
       if (data.secure_url) {
-        console.log("URL de la imagen cargada: "+data.secure_url)
-        await updateProfile(auth.currentUser,{photoURL:data.secure_url})
-        setUser({...user, photoURL: data.secure_url})
-        setImageUri(data.secure_url)
+        console.log("URL de la imagen cargada: " + data.secure_url);
+        await updateProfile(auth.currentUser, { photoURL: data.secure_url });
+        setUser({ ...user, photoURL: data.secure_url });
+        setImageUri(data.secure_url);
         showMessage({
           message: "Exito",
           description: "Foto de perfil actualizada correctamente",
           type: "success",
         });
       } else {
-        throw new Error(data.error?.message || 'No se pudo optener la URL de la imagen')
+        throw new Error(
+          data.error?.message || "No se pudo optener la URL de la imagen"
+        );
       }
     } catch (error) {
       showMessage({
@@ -115,11 +128,11 @@ const CustomScreen = () => {
         description: error.message,
         type: "danger",
       });
-    }finally{
-      setModalVisible(false)
+    } finally {
+      setModalVisible(false);
+      setModalImageVisible(false)
     }
-  }
-  
+  };
 
   const handleEdit = (field) => {
     setModalVisible(true);
@@ -157,11 +170,9 @@ const CustomScreen = () => {
           description: "Nombre actualizado correctamente",
           type: "success",
         });
-      }else if (modalTitle === 'FotoProfile'){
-        await uploadImage()
-
+      } else if (modalTitle === "FotoProfile") {
+        await uploadImage();
       }
-      
     } catch (error) {
       showMessage({
         message: "Error",
@@ -188,15 +199,16 @@ const CustomScreen = () => {
       <View style={styles.infoUser}>
         <View style={{ flex: 2 }}>
           <Text style={styles.textProp}>Foto de Perfil</Text>
-          {/* <Text style={styles.textPropData}>{user?.displayName || " "}</Text> */}
-            <Image source={{uri:imageUri || defaultImage}} style={styles.profileImage}/>
-
+          <Image
+            source={{ uri: imageUri || defaultImage }}
+            style={styles.profileImage}
+          />
         </View>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => handleEdit("FotoProfile")}
+          onPress={() => setModalImageVisible(true)}
         >
-          <Text style={styles.buttonText}>Editar</Text>
+          <Text style={styles.buttonText}>Cambiar</Text>
         </TouchableOpacity>
       </View>
 
@@ -241,11 +253,20 @@ const CustomScreen = () => {
       <ModalEdit
         visible={modalVisible}
         title={modalTitle}
-        value={(modalTitle === "FotoProfile" ? imageUri : fieldValue)}
-        onChangeText={modalTitle === 'FotoProfile' ? handleChooseImage : setFieldValue}
-        onSave={modalTitle === 'FotoProfile' ? uploadImage : handeleSave}
+        value={modalTitle === "FotoProfile" ? imageUri : fieldValue}
+        onChangeText={
+          modalTitle === "FotoProfile" ? handleChooseImage : setFieldValue
+        }
+        onSave={modalTitle === "FotoProfile" ? uploadImage : handeleSave}
         onCancel={() => setModalVisible(false)}
-        isImage={modalTitle === 'FotoProfile' }
+        isImage={modalTitle === "FotoProfile"}
+      />
+      <ModalImagePicker
+        visible={isImageModalVisible}
+        imageUri={imageUri}
+        onChooseImage={handleChooseImage}
+        onSave={uploadImage}
+        onCancel={() => setModalImageVisible(false)}
       />
     </View>
   );
@@ -300,6 +321,6 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-  }
+  },
 });
 export default CustomScreen;
