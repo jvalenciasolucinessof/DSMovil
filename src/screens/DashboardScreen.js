@@ -18,7 +18,7 @@ const DashboardScreen = () => {
       <BottonImage titleimage="MV" onPress={() => navigation.navigate("movies")} />
       <BottonImage titleimage="PK" onPress={() => navigation.navigate("pokemon")} />
       <BottonImage titleimage="DBZ" onPress={() => navigation.navigate("dragonball")} />
-      {/* <BottonImage titleimage="RM" onPress={() => navigation.navigate("movies")} /> */}
+      <BottonImage titleimage="RM" />
         <TouchableOpacity onPress={handelLogout}>
           <Text style={styles.textLink}> Cerrar sesion </Text>
         </TouchableOpacity>
