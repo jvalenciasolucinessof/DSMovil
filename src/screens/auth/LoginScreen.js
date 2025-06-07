@@ -21,6 +21,7 @@ const LoginScreen = () => {
   const navigation = useNavigation();
 
   const handleLogin = () => {
+    // console.log("estoy aca aca aca aca ")
     if (email === "") {
       Alert.alert('❌❌❌', 'El correo no puede ser vacio')
       return false

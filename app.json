@@ -24,6 +24,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d0aba275-2d3d-4a71-99ce-355e75e01852"
+      }
+    },
+    "owner": "juanpablogv04"
   }
 }

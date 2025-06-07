@@ -15,6 +15,8 @@ import DetailMovieScreen from "../screens/movies/DetailMovieScreen.js";
 import PokemonScreen from "../screens/pokemon/PokemonScreen.js";
 import SearchPokeScreen from "../screens/pokemon/SearchPokeScreen.js";
 import PokemonDetailScreen from "../screens/pokemon/PokemonDetailScreen.js";
+import DbScreen from "../screens/dragonball/DbScreen.js";
+import DbDetailScreen from "../screens/dragonball/DbDetailScreen.js";
 const stack = createNativeStackNavigator();
 const AppNavigation = () => {
   const navigation = useNavigation();
@@ -37,6 +39,8 @@ const AppNavigation = () => {
       <stack.Screen name="pokemon" component={PokemonScreen} options={{ headerShown: false }} />
       <stack.Screen name="searchpoke" component={SearchPokeScreen} options={{ headerShown: false }} />
       <stack.Screen name="pokemondetail" component={PokemonDetailScreen} options={{ headerShown: false }} />
+      <stack.Screen name="dragonball" component={DbScreen} options={{ headerShown: false }} />
+      <stack.Screen name="dbdetail" component={DbDetailScreen} options={{ headerShown: false }} />
     </stack.Navigator>
   );
 };

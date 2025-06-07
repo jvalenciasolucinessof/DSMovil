@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "20172997929",
+    "project_id": "dsmovil-67cfc",
+    "storage_bucket": "dsmovil-67cfc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:20172997929:android:ca6c1992ef147599282338",
+        "android_client_info": {
+          "package_name": "AppDBZ.v2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "20172997929-df22kvip3t8vfmjj1go4tpgo2vqt68o6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8M590HWqebinUX40Wu7bgmsP9kAMAte0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "20172997929-df22kvip3t8vfmjj1go4tpgo2vqt68o6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "20172997929-v3knoga46g46kuu8iaqtpja80kehuk6o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "AppDBZ"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

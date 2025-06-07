@@ -3,7 +3,7 @@ import React from "react";
 
 
 const image = {
-  DBZ: require("../../../assets/Ball.png"),
+  DBZ: require("../../../assets/db.png"),
   MV: require("../../../assets/bannerMV.jpg"),
   PK: require("../../../assets/pokeball-dark.png"),
   RM: require("../../../assets/bannerRM.jpg"), 
